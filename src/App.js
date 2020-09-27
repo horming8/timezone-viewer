@@ -83,16 +83,6 @@ class App extends Component {
           time: this.state.currentTime.tz(inputTimezone.timezone).format('LTS')
         }
       }
-
-      if (!this.clocks.includes(newKey)) {
-        this.clocks[newKey] = {
-          code: inputCountryId,
-          country: inputCountryName,
-          timezone: inputTimezone.timezone,
-          date: this.state.currentTime.tz(inputTimezone.timezone).format('L'),
-          time: this.state.currentTime.tz(inputTimezone.timezone).format('LTS')
-        }
-      }
     }
   }
 
