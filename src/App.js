@@ -4,11 +4,12 @@ import ct from 'countries-and-timezones'
 import moment from 'moment'
 import 'moment-timezone'
 
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab'
+import AddIcon from '@material-ui/icons/Add'
+
 import { Box, TextField } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid'
 
 class App extends Component {
   constructor() {
