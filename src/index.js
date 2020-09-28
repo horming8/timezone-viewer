@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import TimezoneViewer from './TimezoneViewer'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <TimezoneViewer />
   </React.StrictMode>,
   document.getElementById('root')
 );
