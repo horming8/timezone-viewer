@@ -22,7 +22,7 @@ const TimezoneViewer = () => {
     const [inputTimezone, setInputTimezone] = useState('')
 
     const timer = useRef(0)
-    const [userTimezones, setUserTimezones] = useState([])
+    const userTimezones = useRef([])
 
     useEffect(() => {
         // convert timezones array of string to array of object
@@ -55,7 +55,7 @@ const TimezoneViewer = () => {
 
     useEffect(() => {
         updatedTimezones.current = updateTimezones()
-    }, [currentTime])
+    }, [currentTime, userTimezones.current])
 
     const handleChangeCountry = (event, value) => {
         if (value) {
@@ -74,22 +74,21 @@ const TimezoneViewer = () => {
     const handleAddTimezone = () => {
         if (inputCountryId && inputTimezone) {
             const newKey = [inputCountryId, inputCountryName, inputTimezone].join('-')
-            if (!userTimezones.includes(newKey)) {
-                let previousUserTimezones = userTimezones
-                previousUserTimezones[newKey] = {
+            if (!userTimezones.current.includes(newKey)) {
+                userTimezones.current[newKey] = {
                     code: inputCountryId,
                     country: inputCountryName,
                     timezone: inputTimezone,
                     date: currentTime.tz(inputTimezone).format('L'),
                     time: currentTime.tz(inputTimezone).format('LTS')
                 }
-                setUserTimezones(previousUserTimezones)
+                setCurrentTime(moment())
             }
         }
     }
 
     const updateTimezones = () => {
-        let gridTimezones = Object.entries(userTimezones).map((tz) => {
+        let gridTimezones = Object.entries(userTimezones.current).map((tz) => {
             let { timezone } = tz[1]
             let date = currentTime.tz(timezone).format('L')
             let time = currentTime.tz(timezone).format('LTS')
