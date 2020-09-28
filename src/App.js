@@ -104,33 +104,40 @@ class App extends Component {
 
     return (
       <Fragment>
-        <Box display='flex' justifyContent='center' alignItems='center'>
-          <Autocomplete
-            size='small'
-            style={{ width: 300 }}
-            options={this.countryOptions}
-            getOptionLabel={(option) => option.name}
-            renderInput={(params) => <TextField {...params} label='Country' variant='outlined' />}
-            onChange={this.handleChangeCountry}
-          />
-          <Autocomplete
-            size='small'
-            style={{ width: 300 }}
-            options={this.state.inputCountryId ? this.countries[this.state.inputCountryId].timezones : []}
-            getOptionLabel={(option) => option.timezone}
-            renderInput={(params) => <TextField {...params} label='Timezone' variant='outlined' />}
-            onChange={this.handleChangeTimezone}
-          />
-          <Fab
-            size='small'
-            color='primary'
-            aria-label='add'
-            onClick={this.handleAddTimezone}
-          >
-            <AddIcon />
-          </Fab>
+        <Box
+          textAlign='center' fontSize='h4.fontSize'
+          mx={-1} mt={-1} boxShadow={3}
+          bgcolor='primary.main' color='primary.contrastText'
+        >
+          Timezone Viewer
         </Box>
-        <div style={{ height: 600, width: '100%' }}>
+        <Box display='flex' justifyContent='center'>
+          <Box m={'10px'}>
+            <Autocomplete size='small' style={{ width: 300 }}
+              options={this.countryOptions}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => <TextField {...params} label='Country' variant='outlined' />}
+              onChange={this.handleChangeCountry}
+            />
+          </Box>
+          <Box m={'10px'}>
+            <Autocomplete size='small' style={{ width: 300 }}
+              options={this.state.inputCountryId ? this.countries[this.state.inputCountryId].timezones : []}
+              getOptionLabel={(option) => option.timezone}
+              renderInput={(params) => <TextField {...params} label='Timezone' variant='outlined' />}
+              onChange={this.handleChangeTimezone}
+            />
+          </Box>
+          <Box m={'10px'}>
+            <Fab size='small' color='primary'
+              aria-label='add'
+              onClick={this.handleAddTimezone}
+            >
+              <AddIcon />
+            </Fab>
+          </Box>
+        </Box>
+        <Box style={{ height: 600, width: '100%' }}>
           <DataGrid
             columns={[
               { field: 'code' },
@@ -141,8 +148,8 @@ class App extends Component {
             ]}
             rows={timezones}
           />
-          </div>
-      </Fragment >
+        </Box>
+      </Fragment>
     )
   }
 }
