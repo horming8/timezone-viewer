@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 
 import ct from 'countries-and-timezones'
 import moment from 'moment'
@@ -11,16 +11,17 @@ import { Box, TextField } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 import { DataGrid } from '@material-ui/data-grid'
 
-export default function TimezoneViewer() {
+const TimezoneViewer = () => {
     const [currentTime, setCurrentTime] = useState(moment())
     const [countries, setCountries] = useState({})
     const [countryOptions, setCountryOptions] = useState([])
+    const updatedTimezones = useRef([])
 
     const [inputCountryId, setInputCountryId] = useState('')
     const [inputCountryName, setInputCountryName] = useState('')
     const [inputTimezone, setInputTimezone] = useState('')
 
-    const [timer, setTimer] = useState(0)
+    const timer = useRef(0)
     const [userTimezones, setUserTimezones] = useState([])
 
     useEffect(() => {
@@ -45,19 +46,18 @@ export default function TimezoneViewer() {
         }
         countryOptions.sort((left, right) => (left.name > right.name) ? 1 : -1)
         setCountryOptions(countryOptions)
-        setTimer(setInterval(() => setCurrentTime(moment()), 1000));
-
-        console.log('mount')
-        console.log('countries', countries)
-        console.log('countryOptions', countryOptions)
+        timer.current = setInterval(() => setCurrentTime(moment()), 1000);
 
         return () => {
-            console.log('unmount')
-            clearInterval(timer)
+            clearInterval(timer.current)
         }
     }, [])
 
-    function handleChangeCountry(event, value) {
+    useEffect(() => {
+        updatedTimezones.current = updateTimezones()
+    }, [currentTime])
+
+    const handleChangeCountry = (event, value) => {
         if (value) {
             setInputCountryId(value.id)
             setInputCountryName(value.name)
@@ -65,13 +65,13 @@ export default function TimezoneViewer() {
         }
     }
 
-    function handleChangeTimezone(event, value) {
+    const handleChangeTimezone = (event, value) => {
         if (value) {
             setInputTimezone(value.timezone)
         }
     }
 
-    function handleAddTimezone() {
+    const handleAddTimezone = () => {
         if (inputCountryId && inputTimezone) {
             const newKey = [inputCountryId, inputCountryName, inputTimezone].join('-')
             if (!userTimezones.includes(newKey)) {
@@ -88,7 +88,7 @@ export default function TimezoneViewer() {
         }
     }
 
-    function updateGridTimezones() {
+    const updateTimezones = () => {
         let gridTimezones = Object.entries(userTimezones).map((tz) => {
             let { timezone } = tz[1]
             let date = currentTime.tz(timezone).format('L')
@@ -104,10 +104,6 @@ export default function TimezoneViewer() {
         })
         return gridTimezones
     }
-
-    console.log('render')
-
-    let gridTimezones = updateGridTimezones()
 
     return (
         <Fragment>
@@ -156,9 +152,11 @@ export default function TimezoneViewer() {
                         { field: 'date', sortIndex: 3, width: 150 },
                         { field: 'time', sortIndex: 4, width: 150 },
                     ]}
-                    rows={gridTimezones}
+                    rows={updatedTimezones.current}
                 />
             </Box>
         </Fragment>
     )
 }
+
+export default TimezoneViewer
