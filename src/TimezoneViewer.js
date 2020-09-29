@@ -15,7 +15,7 @@ const TimezoneViewer = () => {
     const [currentTime, setCurrentTime] = useState(moment())
     const [countries, setCountries] = useState({})
     const [countryOptions, setCountryOptions] = useState([])
-    const updatedTimezones = useRef([])
+    const [updatedTimezones, setUpdatedTimezones] = useState([])
 
     const [inputCountryId, setInputCountryId] = useState('')
     const [inputCountryName, setInputCountryName] = useState('')
@@ -54,8 +54,8 @@ const TimezoneViewer = () => {
     }, [])
 
     useEffect(() => {
-        updatedTimezones.current = updateTimezones()
-    }, [currentTime, userTimezones.current])
+        updateTimezones()
+    }, [currentTime])
 
     const handleChangeCountry = (event, value) => {
         if (value) {
@@ -82,13 +82,16 @@ const TimezoneViewer = () => {
                     date: currentTime.tz(inputTimezone).format('L'),
                     time: currentTime.tz(inputTimezone).format('LTS')
                 }
-                setCurrentTime(moment())
+                // reset user input
+                setInputCountryName('')
+                setInputTimezone('')
+                updateTimezones()
             }
         }
     }
 
     const updateTimezones = () => {
-        let gridTimezones = Object.entries(userTimezones.current).map((tz) => {
+        let currentTimezones = Object.entries(userTimezones.current).map((tz) => {
             let { timezone } = tz[1]
             let date = currentTime.tz(timezone).format('L')
             let time = currentTime.tz(timezone).format('LTS')
@@ -101,7 +104,7 @@ const TimezoneViewer = () => {
                 time: time,
             }
         })
-        return gridTimezones
+        setUpdatedTimezones(currentTimezones)
     }
 
     return (
@@ -151,7 +154,7 @@ const TimezoneViewer = () => {
                         { field: 'date', sortIndex: 3, width: 150 },
                         { field: 'time', sortIndex: 4, width: 150 },
                     ]}
-                    rows={updatedTimezones.current}
+                    rows={updatedTimezones}
                 />
             </Box>
         </Fragment>
